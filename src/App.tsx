@@ -4,12 +4,14 @@
 
 import { Outlet } from "react-router"
 import { Navbar } from "./components/shared/Navbar"
+import { MobileSidebar } from "./components/shared/MobileSidebar"
 
 
 function App() {
   return(
     <>
       <Navbar/>
+      <MobileSidebar/>
       <Outlet/>
     </>
   )

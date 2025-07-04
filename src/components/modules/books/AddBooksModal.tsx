@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { addBook } from "@/redux/features/books/bookSlice";
-import { useAppDispatch } from "@/redux/hook";
+import { useAddBooksMutation } from "@/redux/api/baseApi";
+
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
 
@@ -35,11 +35,17 @@ type BookFormData = {
 export function AddBooksModal() {
   const form = useForm<BookFormData>();
 
-  const dispatch = useAppDispatch()
+  const [createBook] = useAddBooksMutation()
 
-  const onSubmit = (data: BookFormData) => {
-    dispatch(addBook(data))
-  };
+  const onSubmit = async (bookData: BookFormData) => {
+  try {
+    await createBook(bookData).unwrap();
+    form.reset();
+  } catch (err) {
+    console.error("Error creating book:", err);
+  }
+};
+
 
   return (
     <Dialog>
@@ -81,6 +87,19 @@ export function AddBooksModal() {
                   <FormLabel>Author</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g. Paulo Coelho" {...field} value={field.value || ""}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="genre"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Genre</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Fiction" {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

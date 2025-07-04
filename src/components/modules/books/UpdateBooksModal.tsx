@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/hook";
 import { updateBook } from "@/redux/features/books/bookSlice";
 import type { IBooks } from "@/redux/features/books/type";
+import { useEditBooksMutation } from "@/redux/api/baseApi";
 
 type Props = {
   book: IBooks;
@@ -32,6 +33,8 @@ export function UpdateBooksModal({ book }: Props) {
   const form = useForm<IBooks>();
   const dispatch = useAppDispatch();
 
+  const [editBooks] = useEditBooksMutation();
+
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -40,14 +43,23 @@ export function UpdateBooksModal({ book }: Props) {
     }
   }, [open, book, form]);
 
-  const onSubmit = (data: IBooks) => {
-    if (data._id) {
-      dispatch(updateBook({ id: data._id, data: { ...data } }));
-    } else {
-      console.error("Book ID is missing.");
-    }
-    setOpen(false); 
-  };
+const onSubmit = async (data: IBooks) => {
+  if (!data._id) {
+    console.error("Book ID is missing.");
+    return;
+  }
+
+  try {
+
+    await editBooks({ id: data._id, ...data }).unwrap();
+
+    dispatch(updateBook({ id: data._id, data }));
+
+    setOpen(false);
+  } catch (error) {
+    console.error("Failed to update book:", error);
+  }
+};
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

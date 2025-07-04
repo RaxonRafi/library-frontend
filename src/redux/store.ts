@@ -1,12 +1,13 @@
 import {configureStore} from '@reduxjs/toolkit';
-import counterReducer from './features/counter/counterSlice'
-import bookReducer from './features/books/bookSlice'
+import { baseApi } from './api/baseApi';
 
 export const store = configureStore({
     reducer:{
-        counter : counterReducer,
-        books : bookReducer,
+        [baseApi.reducerPath] : baseApi.reducer,
+    
     },
+    middleware : (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(baseApi.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;

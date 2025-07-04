@@ -1,5 +1,6 @@
 import App from "@/App";
 import Books from "@/pages/Books";
+import BorrowSummaryTable from "@/pages/BorrowSummary";
 import Home from "@/pages/Home";
 import { createBrowserRouter } from "react-router";
 
@@ -13,8 +14,8 @@ export const router =  createBrowserRouter([
                 Component: Home
             },
             {
-                path:"all-books",
-                Component: Books
+                path:"books",
+                Component: Home
             },
             {
                 path:"add-books",
@@ -24,7 +25,8 @@ export const router =  createBrowserRouter([
                 path:"borrow-books"
             },
             {
-                path:"borrow-summary"
+                path:"borrow-summary",
+                Component: BorrowSummaryTable
             },
         ]
     }
