@@ -1,5 +1,4 @@
 import App from "@/App";
-import Books from "@/pages/Books";
 import BorrowSummaryTable from "@/pages/BorrowSummary";
 import Home from "@/pages/Home";
 import { createBrowserRouter } from "react-router";
