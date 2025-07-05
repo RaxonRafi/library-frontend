@@ -5,10 +5,11 @@ export const baseApi = createApi({
     baseQuery : fetchBaseQuery({ baseUrl: "https://library-api-weld.vercel.app/api" }),
     tagTypes: ["books"],
     endpoints : (builder)=>({
-        getAllBooks : builder.query({
-            query : ()=> "/books",
-            providesTags: ["books"],
+        getAllBooks: builder.query({
+            query: ({ page = 1, limit = 10 }) =>
+            `/books?page=${page}&limit=${limit}`,
         }),
+
         addBooks : builder.mutation({
             query : (bookData)=> ({
                 url: "/books",

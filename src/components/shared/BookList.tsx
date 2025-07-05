@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -18,13 +18,19 @@ import {
 import type { IBooks } from "@/redux/features/books/type";
 import { BorrowBooksModal } from "../modules/books/BorrowBookModal";
 import { toast } from "react-toastify";
+import { BookDetailsModal } from "../modules/books/BookDetailsModal"; // optional
 
 const BookList = () => {
-  const { data, isLoading } = useGetAllBooksQuery(undefined);
+  const [page, setPage] = useState(1);
+  const limit = 3;
+
+  const { data, isLoading } = useGetAllBooksQuery({ page, limit });
   const [deleteSBook] = useDeleteBooksMutation();
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+
+  const books = data?.data || [];
+  const meta = data?.meta;
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -48,8 +54,8 @@ const BookList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!isLoading &&
-              data.data.map((book: IBooks) => (
+            {books.length > 0 ? (
+              books.map((book: IBooks) => (
                 <TableRow key={book._id}>
                   <TableCell>{book.title}</TableCell>
                   <TableCell>{book.author}</TableCell>
@@ -67,17 +73,12 @@ const BookList = () => {
                       {book.available ? "Yes" : "No"}
                     </span>
                   </TableCell>
-                  <TableCell className="flex justify-around">
+                  <TableCell className="flex flex-wrap gap-2 justify-around">
+                    <BookDetailsModal book={book} />
                     <UpdateBooksModal book={book} />
                     <Button
                       onClick={() => {
                         const id = book._id as string;
-
-                        if (!id) {
-                          toast.error("Book ID is missing");
-                          return;
-                        }
-
                         toast(
                           ({ closeToast }) => (
                             <div className="space-y-2">
@@ -86,9 +87,7 @@ const BookList = () => {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => {
-                                    closeToast?.();
-                                  }}
+                                  onClick={() => closeToast?.()}
                                 >
                                   Cancel
                                 </Button>
@@ -102,7 +101,6 @@ const BookList = () => {
                                       await deleteSBook(id).unwrap();
                                       toast.success("Book deleted successfully!");
                                     } catch (err) {
-                                      console.error("Delete failed", err);
                                       toast.error("Failed to delete book.");
                                     }
                                   }}
@@ -112,11 +110,7 @@ const BookList = () => {
                               </div>
                             </div>
                           ),
-                          {
-                            autoClose: false,
-                            closeOnClick: false,
-                            closeButton: false,
-                          }
+                          { autoClose: false, closeOnClick: false, closeButton: false }
                         );
                       }}
                       className="bg-red-500 text-white"
@@ -126,19 +120,37 @@ const BookList = () => {
                     {book._id && <BorrowBooksModal bookId={book._id} />}
                   </TableCell>
                 </TableRow>
-              ))}
-            {data?.length === 0 && (
+              ))
+            ) : (
               <TableRow>
-                <TableCell
-                  colSpan={7}
-                  className="text-center py-4 text-gray-500"
-                >
+                <TableCell colSpan={7} className="text-center py-4 text-gray-500">
                   No books found.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-6 gap-4">
+        <Button
+          variant="outline"
+          disabled={page <= 1}
+          onClick={() => setPage((prev) => prev - 1)}
+        >
+          ⬅ Prev
+        </Button>
+        <span className="text-sm text-muted-foreground">
+          Page {meta?.currentPage} of {meta?.totalPages}
+        </span>
+        <Button
+          variant="outline"
+          disabled={page >= meta?.totalPages}
+          onClick={() => setPage((prev) => prev + 1)}
+        >
+          Next ➡
+        </Button>
       </div>
     </div>
   );
