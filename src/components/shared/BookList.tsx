@@ -17,6 +17,7 @@ import {
 } from "@/redux/api/baseApi";
 import type { IBooks } from "@/redux/features/books/type";
 import { BorrowBooksModal } from "../modules/books/BorrowBookModal";
+import { toast } from "react-toastify";
 
 const BookList = () => {
   const { data, isLoading } = useGetAllBooksQuery(undefined);
@@ -69,20 +70,56 @@ const BookList = () => {
                   <TableCell className="flex justify-around">
                     <UpdateBooksModal book={book} />
                     <Button
-                      onClick={async () => {
-                        try {
-                          const id = book._id as string
-                          if (id) {
-                            await deleteSBook(id).unwrap();
-                          } else {
-                            console.error("Book ID is missing");
-                          }
-                        } catch (err) {
-    
-                          console.error("Delete failed", err);
+                      onClick={() => {
+                        const id = book._id as string;
+
+                        if (!id) {
+                          toast.error("Book ID is missing");
+                          return;
                         }
+
+                        toast(
+                          ({ closeToast }) => (
+                            <div className="space-y-2">
+                              <p>Are you sure you want to delete this book?</p>
+                              <div className="flex justify-end gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    closeToast?.();
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={async () => {
+                                    closeToast?.();
+                                    try {
+                                      toast.info("Deleting book...");
+                                      await deleteSBook(id).unwrap();
+                                      toast.success("Book deleted successfully!");
+                                    } catch (err) {
+                                      console.error("Delete failed", err);
+                                      toast.error("Failed to delete book.");
+                                    }
+                                  }}
+                                >
+                                  Yes, Delete
+                                </Button>
+                              </div>
+                            </div>
+                          ),
+                          {
+                            autoClose: false,
+                            closeOnClick: false,
+                            closeButton: false,
+                          }
+                        );
                       }}
-                      className="bg-red-500"
+                      className="bg-red-500 text-white"
                     >
                       Delete
                     </Button>

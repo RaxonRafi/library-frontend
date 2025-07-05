@@ -24,6 +24,7 @@ import { useAppDispatch } from "@/redux/hook";
 import { updateBook } from "@/redux/features/books/bookSlice";
 import type { IBooks } from "@/redux/features/books/type";
 import { useEditBooksMutation } from "@/redux/api/baseApi";
+import { toast } from "react-toastify";
 
 type Props = {
   book: IBooks;
@@ -46,18 +47,20 @@ export function UpdateBooksModal({ book }: Props) {
 const onSubmit = async (data: IBooks) => {
   if (!data._id) {
     console.error("Book ID is missing.");
+    toast.error("Book ID is missing.");
     return;
   }
 
   try {
-
     await editBooks({ id: data._id, ...data }).unwrap();
 
     dispatch(updateBook({ id: data._id, data }));
 
+    toast.success("Book updated successfully.");
     setOpen(false);
   } catch (error) {
     console.error("Failed to update book:", error);
+    toast.error("Failed to update book.");
   }
 };
 

@@ -31,6 +31,7 @@ import type { IBorrow } from "@/redux/features/books/type";
 
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 
 type Props = {
@@ -48,9 +49,11 @@ const onSubmit = async (borrowData: IBorrow) => {
       ...borrowData,
       book: bookId,
     }).unwrap();
+    toast.success("Book borrowed successfully!");
     form.reset();
   } catch (err) {
     console.error("Error borrowing book:", err);
+    toast.error("Failed to borrow book.");
   }
 };
 
@@ -74,6 +77,7 @@ const onSubmit = async (borrowData: IBorrow) => {
             <FormField
               control={form.control}
               name="quantity"
+              rules={{ required: "Quantity is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quantity</FormLabel>
@@ -87,6 +91,7 @@ const onSubmit = async (borrowData: IBorrow) => {
             <FormField
                 control={form.control}
                 name="dueDate"
+                rules={{ required: "DueDate is required" }}
                 render={({ field }) => (
                     <FormItem className="flex flex-col">
                     <FormLabel>Due Date</FormLabel>

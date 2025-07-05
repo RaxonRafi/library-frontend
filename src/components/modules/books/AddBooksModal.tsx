@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAddBooksMutation } from "@/redux/api/baseApi";
-
+import { toast } from 'react-toastify';
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
 
@@ -40,9 +40,11 @@ export function AddBooksModal() {
   const onSubmit = async (bookData: BookFormData) => {
   try {
     await createBook(bookData).unwrap();
+    toast.success("Book added successfully!");
     form.reset();
   } catch (err) {
     console.error("Error creating book:", err);
+    toast.error("Failed to add book");
   }
 };
 
@@ -67,6 +69,7 @@ export function AddBooksModal() {
             <FormField
               control={form.control}
               name="title"
+              rules={{ required: "Title is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Title</FormLabel>
@@ -82,6 +85,7 @@ export function AddBooksModal() {
             <FormField
               control={form.control}
               name="author"
+              rules={{ required: "Author is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Author</FormLabel>
@@ -95,6 +99,7 @@ export function AddBooksModal() {
             <FormField
               control={form.control}
               name="genre"
+              rules={{ required: "Genre is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Genre</FormLabel>
@@ -110,6 +115,7 @@ export function AddBooksModal() {
             <FormField
               control={form.control}
               name="isbn"
+              rules={{ required: "Unique ISBN is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>ISBN</FormLabel>
@@ -125,6 +131,7 @@ export function AddBooksModal() {
             <FormField
               control={form.control}
               name="copies"
+              rules={{ required: "Number of Copies is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Copies</FormLabel>

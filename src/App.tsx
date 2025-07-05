@@ -1,37 +1,23 @@
-// import { Button } from "./components/ui/button";
-// import { decrement, increment } from "./redux/features/counter/counterSlice";
-// import { useAppDispatch, useAppSelector } from "./redux/hook";
-
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import { Outlet } from "react-router"
 import { Navbar } from "./components/shared/Navbar"
-import { MobileSidebar } from "./components/shared/MobileSidebar"
+import { Footer } from './components/shared/Footer';
+
+
 
 
 function App() {
   return(
-    <>
+  <div className="min-h-screen flex flex-col">
       <Navbar/>
-      <MobileSidebar/>
-      <Outlet/>
-    </>
+      <ToastContainer position="top-right" autoClose={3000} />
+      <main className="flex-grow">
+        <Outlet/>
+      </main>
+      <Footer/>
+    </div>
   )
-  // const dispatch = useAppDispatch();
-  // const {count} = useAppSelector((state)=> state.counter)
-
-  // const handleIncrement = (ammount : number) =>{
-  //    dispatch(increment(ammount))
-  // }
-  // const handleDecrement = () =>{
-  //   dispatch(decrement())
-  // }
-  // return (
-  // <div>
-  //   <h1>Counter with redux</h1>
-  //   <Button onClick={()=>handleIncrement(5)}>Increament by 5</Button>
-  //   <div>{count}</div>
-  //   <Button onClick={handleDecrement}>Decrement</Button>
-  // </div>
-  // )
 }
 
 export default App

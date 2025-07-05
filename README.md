@@ -1,69 +1,81 @@
-# React + TypeScript + Vite
+# Library App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application for managing a library's book inventory and borrowings, built with React, TypeScript, Vite, Redux Toolkit, and Tailwind CSS.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Book Management**:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+  - View all books in a list.
+  - Add new books via a modal form.
+  - Update existing book details.
+  - Delete books from the library.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Borrowing System**:
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+  - Borrow books through a modal interface.
+  - Track borrow actions and update book availability.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Borrow Summary**:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+  - View a summary table of all borrowed books, including title, ISBN, and total quantity borrowed.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Modern UI/UX**:
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+  - Responsive navigation bar and sidebar for both desktop and mobile.
+  - Toast notifications for user feedback.
+  - Styled with Tailwind CSS and shadcn/ui components.
+
+- **API Integration**:
+  - Uses Redux Toolkit Query to interact with a REST API (`https://library-api-weld.vercel.app/api`).
+
+---
+
+## Setup Guide
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/RaxonRafi/library-frontend.git
+   cd library-app
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   yarn install
+   # or
+   npm install
+   ```
+
+3. **Run the development server**
+
+   ```bash
+   yarn dev
+   # or
+   npm run dev
+   ```
+
+4. **Build for production**
+
+   ```bash
+   yarn build
+   # or
+   npm run build
+   ```
+
+5. **Preview the production build**
+   ```bash
+   yarn preview
+   # or
+   npm run preview
+   ```
+
+---
+
+## Live Link
+> [Live: https://library-app-red-gamma.vercel.app/](#)
+
+---
