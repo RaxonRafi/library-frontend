@@ -8,6 +8,8 @@ export const baseApi = createApi({
         getAllBooks: builder.query({
             query: ({ page = 1, limit = 10 }) =>
             `/books?page=${page}&limit=${limit}`,
+            providesTags: ["books"]
+
         }),
 
         addBooks : builder.mutation({

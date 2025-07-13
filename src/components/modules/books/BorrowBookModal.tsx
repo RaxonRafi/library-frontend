@@ -32,6 +32,7 @@ import type { IBorrow } from "@/redux/features/books/type";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 
 type Props = {
@@ -40,7 +41,7 @@ type Props = {
 
 export function BorrowBooksModal({ bookId }: Props) {
   const form = useForm<IBorrow>();
-
+  const [open, setOpen] = useState(false);
   const [borrowBook] = useBorrowBookMutation()
 
 const onSubmit = async (borrowData: IBorrow) => {
@@ -50,15 +51,25 @@ const onSubmit = async (borrowData: IBorrow) => {
       book: bookId,
     }).unwrap();
     toast.success("Book borrowed successfully!");
+    setOpen(false); 
     form.reset();
   } catch (err) {
     console.error("Error borrowing book:", err);
+    if (
+      err && typeof err === "object" && "data" in err
+    ) {
+      form.setError("quantity", {
+        type: "manual",
+        message: "Not enough copies available!",
+      });
+      return;
+    }
     toast.error("Failed to borrow book.");
   }
 };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-green-500">borrow</Button>
       </DialogTrigger>
@@ -120,6 +131,7 @@ const onSubmit = async (borrowData: IBorrow) => {
                             selected={field.value ? new Date(field.value) : undefined}
                             onSelect={field.onChange}
                             captionLayout="dropdown"
+                            disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                         />
                         </PopoverContent>
                     </Popover>

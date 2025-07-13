@@ -49,7 +49,7 @@ const BookList = () => {
               <TableHead>Genre</TableHead>
               <TableHead>ISBN</TableHead>
               <TableHead>Copies</TableHead>
-              <TableHead>Available</TableHead>
+              <TableHead>Availability</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -65,12 +65,12 @@ const BookList = () => {
                   <TableCell>
                     <span
                       className={`px-2 py-1 text-sm rounded ${
-                        book.available
+                        book.available && book.copies > 0 
                           ? "bg-green-200 text-green-800"
                           : "bg-red-200 text-red-800"
                       }`}
                     >
-                      {book.available ? "Yes" : "No"}
+                      {book.available && book.copies > 0 ? "Available" : "Unavailable"}
                     </span>
                   </TableCell>
                   <TableCell className="flex flex-wrap gap-2 justify-around">

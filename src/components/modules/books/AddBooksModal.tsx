@@ -21,6 +21,7 @@ import { useAddBooksMutation } from "@/redux/api/baseApi";
 import { toast } from 'react-toastify';
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 
 type BookFormData = {
@@ -34,23 +35,37 @@ type BookFormData = {
 
 export function AddBooksModal() {
   const form = useForm<BookFormData>();
+  const [createBook] = useAddBooksMutation();
 
-  const [createBook] = useAddBooksMutation()
+  const [open, setOpen] = useState(false); // control dialog open state
 
   const onSubmit = async (bookData: BookFormData) => {
-  try {
-    await createBook(bookData).unwrap();
-    toast.success("Book added successfully!");
-    form.reset();
-  } catch (err) {
-    console.error("Error creating book:", err);
-    toast.error("Failed to add book");
-  }
-};
+    try {
+      await createBook(bookData).unwrap();
+      toast.success("Book added successfully!");
+      form.reset();
+      setOpen(false); // close modal here on success
+    } catch (err: any) {
+      console.error("Error creating book:", err);
+
+      if (
+        err?.data?.error?.code === 11000 &&
+        err?.data?.error?.keyPattern?.isbn
+      ) {
+        form.setError("isbn", {
+          type: "manual",
+          message: "This ISBN already exists.",
+        });
+        return;
+      }
+
+      toast.error("Failed to add book");
+    }
+  };
 
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>+ Add Book</Button>
       </DialogTrigger>
